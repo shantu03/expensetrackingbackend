@@ -21,7 +21,7 @@ public class UserController {
        try{
 
         UserModel user1 =userService.getUserData(user);
-        return new ResponseEntity<>(user1,HttpStatus.OK);
+        return new ResponseEntity<>(user1.getExpenses(),HttpStatus.OK);
        }catch (Exception e )
        {
            if(e.getMessage().contains("4"))
