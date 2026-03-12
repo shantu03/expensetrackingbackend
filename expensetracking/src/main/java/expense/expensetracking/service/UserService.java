@@ -5,6 +5,7 @@ import expense.expensetracking.Dto.UserDto;
 import expense.expensetracking.model.UserModel;
 import expense.expensetracking.repo.ExpenseRepository;
 import expense.expensetracking.repo.UserRepository;
+import expense.expensetracking.response.ExpenseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class UserService {
     @Autowired
     private ExpenseRepository expenseRepository;
 
-    public UserModel getUserData(UserDto user)
+    public ExpenseDto getUserData(UserDto user)
     {
         try{
 //            validate user
@@ -26,7 +27,7 @@ public class UserService {
         if(user1!=null){
             if(user1.getPassword().equals(user.getPassword()))
             {
-                return user1;
+                return new ExpenseDto(user1.getExpenses(),user1.getUsername());
             }
             else
             {
@@ -40,6 +41,6 @@ public class UserService {
             System.out.println(e.getMessage());
         }
         // --> to-do -- check here
-        return new UserModel();
+        return null;
     }
 }

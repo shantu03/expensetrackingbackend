@@ -2,11 +2,14 @@ package expense.expensetracking.controller;
 
 import expense.expensetracking.Dto.UserDto;
 import expense.expensetracking.model.UserModel;
+import expense.expensetracking.response.ExpenseDto;
 import expense.expensetracking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -20,8 +23,8 @@ public class UserController {
     public ResponseEntity<?> getUserData(@RequestBody UserDto user){
        try{
 
-        UserModel user1 =userService.getUserData(user);
-        return new ResponseEntity<>(user1.getExpenses(),HttpStatus.OK);
+        Optional<ExpenseDto> expense = Optional.ofNullable(userService.getUserData(user));
+        return new ResponseEntity<>(expense,HttpStatus.OK);
        }catch (Exception e )
        {
            if(e.getMessage().contains("4"))
