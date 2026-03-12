@@ -1,5 +1,6 @@
 package expense.expensetracking.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +23,7 @@ public class ExpenseModel {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @lombok.ToString.Exclude
+    @JsonBackReference
     private UserModel user;
 
     private String description;

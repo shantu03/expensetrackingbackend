@@ -1,5 +1,6 @@
 package expense.expensetracking.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +22,6 @@ public class UserModel {
     private String password;
 
     @OneToMany(mappedBy = "user")
-    @lombok.ToString.Exclude
+    @JsonManagedReference
     private List<ExpenseModel> expenses;
 }
