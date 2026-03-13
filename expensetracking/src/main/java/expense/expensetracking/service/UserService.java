@@ -18,12 +18,12 @@ public class UserService {
     @Autowired
     private ExpenseRepository expenseRepository;
 
+
+
     public ExpenseDto getUserData(UserDto user)
     {
-        try{
-//            validate user
-        UserModel user1=userRepository.findByUsername(user.getUsername());
 
+        UserModel user1=userRepository.findByUsername(user.getUsername());
         if(user1!=null){
             if(user1.getPassword().equals(user.getPassword()))
             {
@@ -33,14 +33,7 @@ public class UserService {
             {
                 throw new RuntimeException("5 password not match");
             }
-
         }else throw new RuntimeException("4 user Not Found");
-        }
-        catch (Exception e){
 
-            System.out.println(e.getMessage());
-        }
-        // --> to-do -- check here
-        return null;
     }
 }
