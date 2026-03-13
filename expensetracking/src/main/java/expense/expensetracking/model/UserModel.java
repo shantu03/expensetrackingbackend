@@ -18,12 +18,11 @@ public class UserModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
+    @Column(unique = true,nullable = false)
     private String username;
+    @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user")
-    @JsonManagedReference
-    private List<ExpenseModel> expenses;
 
     public UserModel(String username, String password) {
         this.username = username;

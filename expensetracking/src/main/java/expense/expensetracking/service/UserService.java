@@ -1,11 +1,12 @@
 package expense.expensetracking.service;
 
-
+import java.util.List;
 import expense.expensetracking.Dto.UserDto;
+import expense.expensetracking.model.ExpenseModel;
 import expense.expensetracking.model.UserModel;
 import expense.expensetracking.repo.ExpenseRepository;
 import expense.expensetracking.repo.UserRepository;
-import expense.expensetracking.response.ExpenseDto;
+import expense.expensetracking.response.ExpenseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,14 +26,27 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
 
-    public ExpenseDto getUserData(UserDto user)
+    public ExpenseResponse getUserData(UserDto user)
     {
 
         UserModel user1=userRepository.findByUsername(user.getUsername());
         if(user1!=null){
             if(passwordEncoder.matches(user.getPassword(), user1.getPassword()))
             {
-                return new ExpenseDto(user1.getExpenses(),user1.getUsername());
+
+                List<ExpenseModel> expenseModelList=expenseRepository.findByUserId(user1.getUserId());
+                List<ExpenseResponse.ExpenseItem> items=expenseModelList.stream()
+                        .map(e->new ExpenseResponse.ExpenseItem(
+                                e.getExpenseId(),
+                                e.getDescription(),
+                                e.getAmount(),
+                                e.getPlatform(),
+                                e.getTransactionDate()
+                        )).toList();
+
+                return new ExpenseResponse(user1.getUsername(),items);
+
+
             }
             else
             {
