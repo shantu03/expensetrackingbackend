@@ -3,6 +3,7 @@ package expense.expensetracking.controller;
 import expense.expensetracking.Dto.UserDto;
 import expense.expensetracking.request.ExpenseRequest;
 import expense.expensetracking.response.ExpenseResponse;
+import expense.expensetracking.service.UserExpenseService;
 import expense.expensetracking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserExpenseService userExpenseService;
 
 
 
@@ -51,11 +55,13 @@ public class UserController {
     }
 
 
-//    @PostMapping("/addexpense/{username}")
-//    public ResponseEntity<String> addExpense(@RequestBody ExpenseRequest)
-//    {
-//
-//    }
+    @PostMapping("/addExpense")
+    public ResponseEntity<String> addExpense(@RequestBody ExpenseRequest expense)
+    {
+//        we are assuming that user exist
+        return new ResponseEntity<>(userExpenseService.addExpanse(expense),HttpStatus.OK);
+
+    }
 
 
 

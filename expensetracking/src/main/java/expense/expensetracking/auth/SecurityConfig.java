@@ -22,7 +22,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         // Allow signup and login without authentication
-                        .requestMatchers("/api/signup", "/api/login").permitAll()
+                        .requestMatchers("/api/signup", "/api/login","/api/addExpense").permitAll()
                         // All other requests require authentication
                         .anyRequest().authenticated()
                 );
