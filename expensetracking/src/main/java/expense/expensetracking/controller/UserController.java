@@ -1,7 +1,9 @@
 package expense.expensetracking.controller;
 
 import expense.expensetracking.Dto.UserDto;
-import expense.expensetracking.response.ExpenseDto;
+import expense.expensetracking.request.ExpenseRequest;
+import expense.expensetracking.response.ExpenseResponse;
+import expense.expensetracking.service.UserExpenseService;
 import expense.expensetracking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,12 +17,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserExpenseService userExpenseService;
+
 
 
     @PostMapping("/login")
     public ResponseEntity<?> getUserData(@RequestBody UserDto user) {
         try {
-            ExpenseDto expense = userService.getUserData(user);
+            ExpenseResponse expense = userService.getUserData(user);
             return new ResponseEntity<>(expense, HttpStatus.OK);
         } catch (Exception e) {
             if (e.getMessage().contains("4"))
@@ -47,6 +52,15 @@ public class UserController {
         {
             return new ResponseEntity<>("server error in signup",HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    @PostMapping("/addExpense")
+    public ResponseEntity<String> addExpense(@RequestBody ExpenseRequest expense)
+    {
+//        we are assuming that user exist
+        return new ResponseEntity<>(userExpenseService.addExpanse(expense),HttpStatus.OK);
+
     }
 
 
