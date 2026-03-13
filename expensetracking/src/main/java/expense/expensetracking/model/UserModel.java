@@ -24,4 +24,9 @@ public class UserModel {
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<ExpenseModel> expenses;
+
+    public UserModel(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }
