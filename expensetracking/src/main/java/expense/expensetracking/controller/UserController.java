@@ -32,7 +32,22 @@ public class UserController {
         }
     }
 
+    @PostMapping("/signup")
+    public ResponseEntity<?> signupUser(@RequestBody UserDto user)
+    {
+        try{
+            Boolean isUserAlreadyPresent=userService.signupUser(user);
 
+            if(Boolean.FALSE.equals(isUserAlreadyPresent))
+                return new ResponseEntity<>("Username already Exists",HttpStatus.BAD_REQUEST);
+
+            return new ResponseEntity<>("User Created !",HttpStatus.OK);
+
+        }catch (Exception e)
+        {
+            return new ResponseEntity<>("server error in signup",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 
