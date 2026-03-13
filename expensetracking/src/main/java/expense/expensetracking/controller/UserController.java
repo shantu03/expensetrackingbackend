@@ -26,54 +26,51 @@ public class UserController {
     @Autowired
     private JwtService jwtService;
 
-
-
     @PostMapping("/login")
     public ResponseEntity<?> getUserData(@RequestBody UserDto user) {
         try {
             ExpenseResponse expense = userService.getUserData(user);
-
-            String token=jwtService.generateToken(user.getUsername());
+            String token = jwtService.generateToken(user.getUsername());
             return new ResponseEntity<>(Map.of(
-                    "token",token,
-                    "data",expense
+                    "token", token,
+                    "data", expense
             ), HttpStatus.OK);
         } catch (Exception e) {
             if (e.getMessage().contains("4"))
                 return new ResponseEntity<>(e.getMessage().substring(2), HttpStatus.NOT_FOUND);
             if (e.getMessage().contains("5"))
                 return new ResponseEntity<>(e.getMessage().substring(2), HttpStatus.UNAUTHORIZED);
-
             return new ResponseEntity<>("server error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signupUser(@RequestBody UserDto user)
-    {
-        try{
-            Boolean isUserAlreadyPresent=userService.signupUser(user);
-
-            if(Boolean.FALSE.equals(isUserAlreadyPresent))
-                return new ResponseEntity<>("Username already Exists",HttpStatus.BAD_REQUEST);
-
-            return new ResponseEntity<>("User Created !",HttpStatus.OK);
-
-        }catch (Exception e)
-        {
-            return new ResponseEntity<>("server error in signup",HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> signupUser(@RequestBody UserDto user) {
+        try {
+            Boolean isUserAlreadyPresent = userService.signupUser(user);
+            if (Boolean.FALSE.equals(isUserAlreadyPresent))
+                return new ResponseEntity<>("Username already exists", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("User created!", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("server error in signup", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-
     @PostMapping("/addExpense")
-    public ResponseEntity<String> addExpense(@RequestBody ExpenseRequest expense)
-    {
-//        we are assuming that user exist
-        return new ResponseEntity<>(userExpenseService.addExpanse(expense),HttpStatus.OK);
-
+    public ResponseEntity<String> addExpense(@RequestBody ExpenseRequest expense) {
+        return new ResponseEntity<>(userExpenseService.addExpense(expense), HttpStatus.OK);
     }
 
 
+    @DeleteMapping("deleteExpense/{expenseId}")
+    public ResponseEntity<?> deleteExpense(@PathVariable Integer expenseId)
+    {
+        return new ResponseEntity<>(userExpenseService.deleteExpense(expenseId),HttpStatus.OK);
+    }
+
+    @PutMapping("/updateExpense")
+    public ResponseEntity<?> updateExpense(@RequestBody ExpenseRequest expense) {
+        return new ResponseEntity<>(userExpenseService.updateExpense(expense), HttpStatus.OK);
+    }
 
 }

@@ -11,8 +11,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ExpenseRequest {
 
-    private String username;      // temporary, remove once JWT is added
-    private Integer expenseId;    // null on add, required on edit
+
+    private Integer expenseId;
     private String description;
     private Double amount;
     private String platform;
