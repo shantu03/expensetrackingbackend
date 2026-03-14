@@ -53,7 +53,9 @@ public class UserExpenseService {
 
         UserModel user = getLoggedInUser();
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("transactionDate").descending());
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Order.desc("transactionDate"),
+                        Sort.Order.asc("expenseId")));
 
         Page<ExpenseModel> expensePage =
                 expenseRepository.findByUserId(user.getUserId(), pageable);
@@ -69,6 +71,13 @@ public class UserExpenseService {
                         )).toList();
 
         return new ExpenseResponse(user.getUsername(), items);
+    }
+
+    public Double getMonthlyExpense(int year, int month)
+    {
+        UserModel user=getLoggedInUser();
+
+        return expenseRepository.getMontlyExpense(user.getUserId(),year,month);
     }
 
     public String deleteExpense(Integer expenseId) {

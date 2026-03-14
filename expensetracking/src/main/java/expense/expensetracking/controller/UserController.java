@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
@@ -81,5 +82,24 @@ public class UserController {
     ){
         return ResponseEntity.ok(userExpenseService.getExpenses(page,size));
     }
+
+    @GetMapping("/monthExpense")
+    public ResponseEntity<?> getMontlyExpense(
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) Integer month
+    )
+    {
+        LocalDate now =LocalDate.now();
+
+        if(year==null) year=now.getYear();
+
+        if(month==null) month=now.getMonthValue();
+
+        return ResponseEntity.ok(
+                userExpenseService.getMonthlyExpense(year,month)
+        );
+    }
+
+
 
 }
