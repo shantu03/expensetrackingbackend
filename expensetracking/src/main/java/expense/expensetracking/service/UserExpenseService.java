@@ -5,9 +5,14 @@ import expense.expensetracking.model.UserModel;
 import expense.expensetracking.repo.ExpenseRepository;
 import expense.expensetracking.repo.UserRepository;
 import expense.expensetracking.request.ExpenseRequest;
+import expense.expensetracking.response.ExpenseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -42,6 +47,28 @@ public class UserExpenseService {
         expenseRepository.save(model);
         return "expense added";
 
+    }
+
+    public ExpenseResponse getExpenses(int page, int size) {
+
+        UserModel user = getLoggedInUser();
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("transactionDate").descending());
+
+        Page<ExpenseModel> expensePage =
+                expenseRepository.findByUserId(user.getUserId(), pageable);
+
+        List<ExpenseResponse.ExpenseItem> items =
+                expensePage.getContent().stream()
+                        .map(e -> new ExpenseResponse.ExpenseItem(
+                                e.getExpenseId(),
+                                e.getDescription(),
+                                e.getAmount(),
+                                e.getPlatform(),
+                                e.getTransactionDate()
+                        )).toList();
+
+        return new ExpenseResponse(user.getUsername(), items);
     }
 
     public String deleteExpense(Integer expenseId) {
