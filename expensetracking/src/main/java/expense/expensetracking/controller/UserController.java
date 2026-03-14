@@ -6,6 +6,7 @@ import expense.expensetracking.response.ExpenseResponse;
 import expense.expensetracking.service.JwtService;
 import expense.expensetracking.service.UserExpenseService;
 import expense.expensetracking.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signupUser(@RequestBody UserDto user) {
+    public ResponseEntity<?> signupUser(@Valid @RequestBody UserDto user) {
         try {
             Boolean isUserAlreadyPresent = userService.signupUser(user);
             if (Boolean.FALSE.equals(isUserAlreadyPresent))

@@ -8,6 +8,7 @@ import expense.expensetracking.repo.ExpenseRepository;
 import expense.expensetracking.repo.UserRepository;
 import expense.expensetracking.response.ExpenseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -26,34 +27,26 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
 
-    public ExpenseResponse getUserData(UserDto user)
-    {
+    public ExpenseResponse getUserData(UserDto user) {
+        UserModel user1 = userRepository.findByUsername(user.getUsername());
 
-        UserModel user1=userRepository.findByUsername(user.getUsername());
-        if(user1!=null){
-            if(passwordEncoder.matches(user.getPassword(), user1.getPassword()))
-            {
+        if (user1 == null)
+            throw new RuntimeException("4 user not found");
 
-                List<ExpenseModel> expenseModelList=expenseRepository.findByUserId(user1.getUserId());
-                List<ExpenseResponse.ExpenseItem> items=expenseModelList.stream()
-                        .map(e->new ExpenseResponse.ExpenseItem(
-                                e.getExpenseId(),
-                                e.getDescription(),
-                                e.getAmount(),
-                                e.getPlatform(),
-                                e.getTransactionDate()
-                        )).toList();
+        if (!passwordEncoder.matches(user.getPassword(), user1.getPassword()))
+            throw new RuntimeException("5 password not match");
 
-                return new ExpenseResponse(user1.getUsername(),items);
+        List<ExpenseModel> expenseModelList = expenseRepository.findByUserId(user1.getUserId());
+        List<ExpenseResponse.ExpenseItem> items = expenseModelList.stream()
+                .map(e -> new ExpenseResponse.ExpenseItem(
+                        e.getExpenseId(),
+                        e.getDescription(),
+                        e.getAmount(),
+                        e.getPlatform(),
+                        e.getTransactionDate()
+                )).toList();
 
-
-            }
-            else
-            {
-                throw new RuntimeException("5 password not match");
-            }
-        }else throw new RuntimeException("4 user Not Found");
-
+        return new ExpenseResponse(user1.getUsername(), items);
     }
 
     public Boolean signupUser(UserDto user)

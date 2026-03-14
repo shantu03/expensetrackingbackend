@@ -7,6 +7,7 @@ import expense.expensetracking.repo.UserRepository;
 import expense.expensetracking.request.ExpenseRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -31,7 +32,7 @@ public class UserExpenseService {
 
         UserModel user=getLoggedInUser();
 
-        if(user==null) return "user not found";
+        if(user==null) throw new RuntimeException("user not found");
 
         model.setUserId(user.getUserId());
         model.setAmount(expenseRequest.getAmount());
@@ -39,13 +40,13 @@ public class UserExpenseService {
         model.setTransactionDate(expenseRequest.getTransactionDate());
         model.setDescription(expenseRequest.getDescription());
         expenseRepository.save(model);
-        return "expanse added";
+        return "expense added";
 
     }
 
     public String deleteExpense(Integer expenseId) {
         UserModel user = getLoggedInUser();
-        if (user == null) return "user not found";
+        if(user == null) throw new RuntimeException("user not found");
 
         Optional<ExpenseModel> expense = expenseRepository.findById(expenseId);
 
@@ -63,8 +64,7 @@ public class UserExpenseService {
 
     public String updateExpense(ExpenseRequest expenseRequest) {
         UserModel user = getLoggedInUser();
-        if (user == null) return "user not found";
-
+        if(user == null) throw new RuntimeException("user not found");
         if (expenseRequest.getExpenseId() == null) return "expenseId is required for update";
 
         Optional<ExpenseModel> existing = expenseRepository.findById(expenseRequest.getExpenseId());

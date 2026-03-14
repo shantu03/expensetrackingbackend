@@ -1,20 +1,20 @@
 package expense.expensetracking.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
+
 
 import java.time.LocalDate;
-import java.util.Date;
+
 
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name ="expanses")
+@Table(name ="expenses")
 public class ExpenseModel {
 
     @Id
@@ -28,7 +28,7 @@ public class ExpenseModel {
     @Column(nullable = false)
     private Double amount;
 
-    private String platform="NA";
+    private String platform;
     @Column(nullable = false)
     private LocalDate transactionDate;
 }
