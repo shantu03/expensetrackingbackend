@@ -27,7 +27,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
 
-    public ExpenseResponse getUserData(UserDto user) {
+    public String getUserData(UserDto user) {
         UserModel user1 = userRepository.findByUsername(user.getUsername());
 
         if (user1 == null)
@@ -36,17 +36,9 @@ public class UserService {
         if (!passwordEncoder.matches(user.getPassword(), user1.getPassword()))
             throw new RuntimeException("5 password not match");
 
-        List<ExpenseModel> expenseModelList = expenseRepository.findByUserId(user1.getUserId());
-        List<ExpenseResponse.ExpenseItem> items = expenseModelList.stream()
-                .map(e -> new ExpenseResponse.ExpenseItem(
-                        e.getExpenseId(),
-                        e.getDescription(),
-                        e.getAmount(),
-                        e.getPlatform(),
-                        e.getTransactionDate()
-                )).toList();
 
-        return new ExpenseResponse(user1.getUsername(), items);
+
+        return user1.getUsername();
     }
 
     public Boolean signupUser(UserDto user)

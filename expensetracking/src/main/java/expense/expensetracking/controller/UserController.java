@@ -30,11 +30,11 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> getUserData(@RequestBody UserDto user) {
         try {
-            ExpenseResponse expense = userService.getUserData(user);
+            String userData = userService.getUserData(user);
             String token = jwtService.generateToken(user.getUsername());
             return new ResponseEntity<>(Map.of(
                     "token", token,
-                    "data", expense
+                    "username", userData
             ), HttpStatus.OK);
         } catch (Exception e) {
             if (e.getMessage().contains("4"))
@@ -72,6 +72,14 @@ public class UserController {
     @PutMapping("/updateExpense")
     public ResponseEntity<?> updateExpense(@RequestBody ExpenseRequest expense) {
         return new ResponseEntity<>(userExpenseService.updateExpense(expense), HttpStatus.OK);
+    }
+
+    @GetMapping("/getExpenses")
+    public ResponseEntity<?> getExpenses(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ){
+        return ResponseEntity.ok(userExpenseService.getExpenses(page,size));
     }
 
 }
