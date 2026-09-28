@@ -7,3 +7,5 @@ This project follows a decoupled full-stack architecture, ensuring high scalabil
 * **Database:** Powered by **Neon**, utilizing a serverless **PostgreSQL** instance for flexible and scalable data storage.
 
 All components are fully integrated, providing a seamless end-to-end user experience with automated deployment workflows.
+
+This is backend part file ; Java, Spring Boot, Spring Security
